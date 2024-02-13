@@ -32,18 +32,32 @@ public class Diagram
 	
 	public void addClass() {
 		//Añade una clase al diagrama
+		classes.add(new Class());
 	}
 	
 	public int getNClasses(){
 		//Devuelve el número de clases
+		return classes.capacity();
+
 	}
 	
 	public int getNAssociations(){
 		//Devuelve el numero de asociaciones
+		return associations.capacity();
 	}
 
 	public void paint(Graphics g) {
 		//Dibuja el diagrama de clases
+				//Dibuja la clase
+		Graphics2D g2 = (Graphics2D)g;
+		
+		for (Class cl : classes) {
+			cl.draw(g2);
+		} 
+		for (Association cl : associations) {
+			as.draw(g2);
+		} 
+		
 	}
 	
 	/********************************************/
