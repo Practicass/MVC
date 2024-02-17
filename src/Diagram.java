@@ -12,9 +12,8 @@ public class Diagram
 	//atributos
 	private Window window;//Ventana en la que está el diagrama
 	public Class clase; 
-	
-	private Vector classes = new Vector(); //las clases que crea el usuario
-	private Vector associations = new Vector(); // las asociaciones que crea el usuario
+	private Vector<Class> classes = new Vector<Class>(); //las clases que crea el usuario
+	private Vector<Association> associations = new Vector<Association>(); // las asociaciones que crea el usuario
 	
 	// ... (otros posibles atributos)
 
@@ -32,7 +31,9 @@ public class Diagram
 	
 	public void addClass() {
 		//Añade una clase al diagrama
-		classes.add(new Class());
+		classes.add(new Class("clase", 10, 10, 100, 100));
+		paint(getGraphics());
+
 	}
 	
 	public int getNClasses(){
@@ -50,11 +51,11 @@ public class Diagram
 		//Dibuja el diagrama de clases
 				//Dibuja la clase
 		Graphics2D g2 = (Graphics2D)g;
-		
+		g2.clearRect(0, 0, getWidth(), getHeight());
 		for (Class cl : classes) {
 			cl.draw(g2);
 		} 
-		for (Association cl : associations) {
+		for (Association as : associations) {
 			as.draw(g2);
 		} 
 		
@@ -65,11 +66,28 @@ public class Diagram
 	/********************************************/
 
 	public void mousePressed(MouseEvent e) {
-		//…
+		int x = e.getX();
+		int y = e.getY();
+	
+		for (Class cl : classes) {
+			// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
+			if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
+				y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
+				// El mouse se ha pulsado dentro de esta clase
+				clase = cl;
+				break;
+			}
+		}
    	 }
     
     	public void mouseReleased(MouseEvent e) {
  		//…		
+			if (clase != null) {
+				paint(getGraphics());
+				clase = null;
+
+			}
+		
     	}
     
 	    public void mouseEntered(MouseEvent e) {
@@ -90,6 +108,12 @@ public class Diagram
     
 	public void mouseDragged(MouseEvent e) {
 		//…
+		if(clase != null){
+
+			clase.setRectangle(e.getX(), e.getY(), clase.getWidth(), clase.getHeight());
+			paint(getGraphics());
+		}
+		
 	}
     
 	/********************************************/

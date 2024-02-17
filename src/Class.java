@@ -23,20 +23,32 @@ public class Class {
 		//Dibuja la clase
 		Graphics2D g2 = (Graphics2D)g;
 		
-		g2.setColor(Color.white);
+		g2.setColor(Color.black);
 		g2.draw(rectangle);
 		g2.drawString(name, rectangle.x+15, rectangle.y+15);	
 	}
 	
 	//Otros metodos	
+	public int getX(){
+		return rectangle.x;
+	}
+	public int getY(){
+		return rectangle.y;
+	}
+	public int getWidth(){
+		return rectangle.width;
+	}
+	public int getHeight(){
+		return rectangle.height;
+	}
 
 
 	public void setName(String name){
 		this.name = name;
 	}
 
-	public void setRectangle(Rectangle rectangle){
-		this.rectangle = rectangle;
+	public void setRectangle(int x, int y, int width, int height){
+		this.rectangle = new Rectangle(x, y, width, height);
 	}
 
 
