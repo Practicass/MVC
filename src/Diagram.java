@@ -12,11 +12,12 @@ public class Diagram
 	//atributos
 	private Window window;//Ventana en la que está el diagrama
 	public Class clase; 
+	public Class clase2; 
 	private Vector<Class> classes = new Vector<Class>(); //las clases que crea el usuario
 	private Vector<Association> associations = new Vector<Association>(); // las asociaciones que crea el usuario
 	
 	// ... (otros posibles atributos)
-
+	int x, y;
 
 	//metodos
 	public Diagram(Window theWindow) {
@@ -31,9 +32,16 @@ public class Diagram
 	
 	public void addClass() {
 		//Añade una clase al diagrama
-		classes.add(new Class("clase", 10, 10, 100, 100));
+		classes.add(new Class("clase", 10, 10, 100, 100, Color.white));
 		paint(getGraphics());
 
+	}
+
+	public void addAssociation() {
+		//Añade una asociación al diagrama
+		//...
+		associations.add(new Association(clase, clase2));
+		paint(getGraphics());
 	}
 	
 	public int getNClasses(){
@@ -52,12 +60,13 @@ public class Diagram
 				//Dibuja la clase
 		Graphics2D g2 = (Graphics2D)g;
 		g2.clearRect(0, 0, getWidth(), getHeight());
-		for (Class cl : classes) {
-			cl.draw(g2);
-		} 
 		for (Association as : associations) {
 			as.draw(g2);
 		} 
+		for (Class cl : classes) {
+			cl.draw(g2);
+		} 
+
 		
 	}
 	
@@ -66,14 +75,16 @@ public class Diagram
 	/********************************************/
 
 	public void mousePressed(MouseEvent e) {
-		int x = e.getX();
-		int y = e.getY();
+		x = e.getX();
+		y = e.getY();
 	
 		for (Class cl : classes) {
 			// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
 			if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
 				y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
 				// El mouse se ha pulsado dentro de esta clase
+				x -= cl.getX();
+				y -= cl.getY();
 				clase = cl;
 				break;
 			}
@@ -83,8 +94,33 @@ public class Diagram
     	public void mouseReleased(MouseEvent e) {
  		//…		
 			if (clase != null) {
-				paint(getGraphics());
-				clase = null;
+				if(clase.isSelected()){
+					x = e.getX();
+					y = e.getY();
+					for (Class cl : classes) {
+						// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
+						if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
+							y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
+							// El mouse se ha pulsado dentro de esta clase
+							x -= cl.getX();
+							y -= cl.getY();
+							clase2 = cl;
+							break;
+						}
+					}
+					if(clase2 != null){
+
+						this.addAssociation();
+						clase = null;
+						clase2 = null;
+					}
+
+				}
+				else{
+					paint(getGraphics());
+					clase = null;
+				}
+
 
 			}
 		
@@ -97,6 +133,28 @@ public class Diagram
     	}
     
 	public void mouseClicked(MouseEvent e) {
+			if (e.getButton() == MouseEvent.BUTTON1) {
+
+			} else if (e.getButton() == MouseEvent.BUTTON3) {
+				int x = e.getX();
+				int y = e.getY();
+			
+				for (Class cl : classes) {
+					// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
+					if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
+						y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
+						// El mouse se ha pulsado dentro de esta clase
+						clase = cl;
+						break;
+					}
+				}
+				if(clase != null){
+					classes.remove(clase);
+					paint(getGraphics());
+					clase= null;
+				}
+				
+			}
     	}
 
 	/********************************************/
@@ -104,14 +162,17 @@ public class Diagram
 	/********************************************/    
     	public void mouseMoved(MouseEvent e) {
 		//…
+		x=e.getX();
+		y=e.getY();
 	}
     
 	public void mouseDragged(MouseEvent e) {
 		//…
 		if(clase != null){
-
-			clase.setRectangle(e.getX(), e.getY(), clase.getWidth(), clase.getHeight());
-			paint(getGraphics());
+			if(!clase.isSelected()){
+				clase.setRectangle(e.getX()-x, e.getY()-y, clase.getWidth(), clase.getHeight());
+				paint(getGraphics());
+			}
 		}
 		
 	}
@@ -121,7 +182,33 @@ public class Diagram
 	/********************************************/
 
 	public void keyTyped(KeyEvent e) {
-    	}
+		if(e.getKeyChar() == KeyEvent.VK_S){
+			for (Class cl : classes) {
+				// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
+				if (cl.isSelected()) {
+					// El mouse se ha pulsado dentro de esta clase
+					cl.setColor(Color.white);
+					paint(getGraphics());
+					break;
+				}
+			}
+			for (Class cl : classes) {
+				// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
+				if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
+					y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
+					// El mouse se ha pulsado dentro de esta clase
+					clase = cl;
+					break;
+				}
+			}
+			if(clase != null){
+				clase.setColor(Color.cyan);
+				paint(getGraphics());
+				clase= null;
+			}
+		}
+
+    }
     
 	public void keyPressed(KeyEvent e) {
 		//…

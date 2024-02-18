@@ -11,35 +11,48 @@ public class Class {
 	
 	//Atributos
 	private String name; //Nombre de la clase	
-	private Rectangle rectangle; //Rectangulo que representa la clase
+	private Rectangle rectangle1; //Rectangulo que representa el nombre
+	private Rectangle rectangle2; //Rectangulo que representa los atributos
+	private Rectangle rectangle3; //Rectangulo que representa los metodos clase
+	private Color color; //Color de la clase fondo
 
 	
-	public Class(String name, int x, int y, int width, int height) {
+	public Class(String name, int x, int y, int width, int height, Color colorFill) {
 		this.name = name;
-		this.rectangle = new Rectangle(x, y, width, height);
+		this.rectangle1 = new Rectangle(x, y, width, height/3);
+		this.rectangle2 = new Rectangle(x, y+height/3, width, height/3);
+		this.rectangle3 = new Rectangle(x, y+2*height/3, width, height/3);
+		color = colorFill;
 	}
 	
 	public void draw(Graphics g){
 		//Dibuja la clase
 		Graphics2D g2 = (Graphics2D)g;
 		
+		g2.setColor(color);
+		g2.fillRect(rectangle1.x, rectangle1.y, getWidth(), getHeight());
 		g2.setColor(Color.black);
-		g2.draw(rectangle);
-		g2.drawString(name, rectangle.x+15, rectangle.y+15);	
+		g2.draw(rectangle1);
+		g2.draw(rectangle2);
+		g2.draw(rectangle3);
+
+		g2.drawString(name, rectangle1.x+35, rectangle1.y+15);	
+		g2.drawString("atributos", rectangle2.x+27, rectangle2.y+15);
+		g2.drawString("metodos", rectangle3.x+27, rectangle3.y+15);
 	}
 	
 	//Otros metodos	
 	public int getX(){
-		return rectangle.x;
+		return rectangle1.x;
 	}
 	public int getY(){
-		return rectangle.y;
+		return rectangle1.y;
 	}
 	public int getWidth(){
-		return rectangle.width;
+		return rectangle1.width;
 	}
 	public int getHeight(){
-		return rectangle.height;
+		return rectangle1.height+rectangle2.height+rectangle3.height;
 	}
 
 
@@ -48,7 +61,15 @@ public class Class {
 	}
 
 	public void setRectangle(int x, int y, int width, int height){
-		this.rectangle = new Rectangle(x, y, width, height);
+		this.rectangle1 = new Rectangle(x, y, width, height/3);
+		this.rectangle2 = new Rectangle(x, y+height/3, width, height/3);
+		this.rectangle3 = new Rectangle(x, y+2*height/3, width, height/3);	
+	}
+	public void setColor(Color color){
+		this.color = color;
+	}
+	public boolean isSelected(){
+		return color == Color.cyan;
 	}
 
 
