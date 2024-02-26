@@ -63,12 +63,13 @@ public class Window implements ActionListener {
 	public void actionPerformed(ActionEvent e){
 		diagram.addClass();
 		diagram.requestFocusInWindow();
+		updateNClasses(diagram);
 	}
 	
 	public void updateNClasses(Diagram d){
 		labelNClasses.setText("Classes: " + d.getNClasses());
 	}
 	public void updateNAssociations(Diagram d){
-		labelNAssociations.setText("Associations: " + diagram.getNAssociations());
+		labelNAssociations.setText("Associations: " + d.getNAssociations());
 	}
 }

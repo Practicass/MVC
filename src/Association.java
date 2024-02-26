@@ -35,12 +35,18 @@ public class Association {
         double y1 = class1.getY() + class1.getHeight() / 2.0;
         double x2 = class2.getX() + class2.getWidth() / 2.0;
         double y2 = class2.getY() + class2.getHeight() / 2.0;
+		if(class1 == class2){
+			
+		}
 		line.setLine(x1, y1, x2, y2);
 		graphics2d.setColor(Color.black);
 		graphics2d.draw(line);
 		// ...
 	}
 
+	public boolean isClass(Class clas){
+		return (this.class1 == clas || this.class2 == clas);
+	}
 	// Más métodos
 	// ...
 

@@ -11,6 +11,7 @@ public class Diagram
 	
 	//atributos
 	private Window window;//Ventana en la que está el diagrama
+	private int nClasses = 0; //Número de clases
 	public Class clase; 
 	public Class clase2; 
 	private Vector<Class> classes = new Vector<Class>(); //las clases que crea el usuario
@@ -32,7 +33,8 @@ public class Diagram
 	
 	public void addClass() {
 		//Añade una clase al diagrama
-		classes.add(new Class("clase", 10, 10, 100, 100, Color.white));
+		classes.add(new Class("clase "+nClasses, 10, 10, 100, 100, Color.white));
+		nClasses++;
 		paint(getGraphics());
 
 	}
@@ -46,13 +48,13 @@ public class Diagram
 	
 	public int getNClasses(){
 		//Devuelve el número de clases
-		return classes.capacity();
+		return classes.size();
 
 	}
 	
 	public int getNAssociations(){
 		//Devuelve el numero de asociaciones
-		return associations.capacity();
+		return associations.size();
 	}
 
 	public void paint(Graphics g) {
@@ -111,6 +113,7 @@ public class Diagram
 					if(clase2 != null){
 
 						this.addAssociation();
+						window.updateNAssociations(this);
 						clase = null;
 						clase2 = null;
 					}
@@ -133,9 +136,9 @@ public class Diagram
     	}
     
 	public void mouseClicked(MouseEvent e) {
-			if (e.getButton() == MouseEvent.BUTTON1) {
+			if (e.getButton() == MouseEvent.BUTTON1) { 
 
-			} else if (e.getButton() == MouseEvent.BUTTON3) {
+			} else if (e.getButton() == MouseEvent.BUTTON3) { //BUTTON3 es el botón derecho
 				int x = e.getX();
 				int y = e.getY();
 			
@@ -145,13 +148,22 @@ public class Diagram
 						y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
 						// El mouse se ha pulsado dentro de esta clase
 						clase = cl;
-						break;
+						
 					}
 				}
 				if(clase != null){
 					classes.remove(clase);
+					for(Association as : associations){
+						if(as.isClass(clase)){
+							window.updateNAssociations(this);
+							associations.remove(as);
+							window.updateNAssociations(this);
+						}
+					}
 					paint(getGraphics());
 					clase= null;
+					window.updateNClasses(this);
+					
 				}
 				
 			}
