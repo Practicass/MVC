@@ -49,9 +49,14 @@ public class Association {
 		// ...
 	}
 
-	public boolean isClass(Class clas){
-		return (this.class1 == clas || this.class2 == clas);
+	public boolean isClass1(Class clas){
+		return (this.class1 == clas );
 	}
+	public boolean isClass2(Class clas){
+		return (this.class2 == clas);
+	}
+	
+	
 	// Más métodos
 	// ...
 

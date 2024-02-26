@@ -80,8 +80,8 @@ public class Diagram
 		x = e.getX();
 		y = e.getY();
 	
-		for (Class cl : classes) {
-			// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
+		for (int i = classes.size() - 1; i >= 0; i--) {
+			Class cl=classes.get(i);			// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
 			if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
 				y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
 				// El mouse se ha pulsado dentro de esta clase
@@ -111,14 +111,25 @@ public class Diagram
 						}
 					}
 					if(clase2 != null){
+						boolean existente = false;
+						for(Association as : associations){
+							if((as.isClass1(clase) && as.isClass2(clase2)) || (as.isClass1(clase2) && as.isClass2(clase))){
+								existente = true;
+							}
+						}
+						if(!existente){
+							this.addAssociation();
+							window.updateNAssociations(this);
 
-						this.addAssociation();
-						window.updateNAssociations(this);
+
+						}
 						clase2.setColor(Color.white);
 						clase.setColor(Color.white);
 						paint(getGraphics());
+
 						clase = null;
 						clase2 = null;
+
 					}
 
 				}
@@ -156,15 +167,11 @@ public class Diagram
 				}
 				if(clase != null){
 					classes.remove(clase);
-					// for(Association as : associations){
-					// 	if(as.isClass(clase)){
-					// 		associations.remove(as);
-					// 	}
-					// }
+
 					Iterator<Association> iterator = associations.iterator();
 					while (iterator.hasNext()) {
 						Association as = iterator.next();
-						if (as.isClass(clase)) {
+						if (as.isClass1(clase) || as.isClass2(clase)) {
 							iterator.remove();
 						}
 					}
@@ -220,6 +227,11 @@ public class Diagram
 							// El mouse se ha pulsado dentro de esta clase
 							clase2 = cl;
 							clase2.setColor(Color.green);
+							for(Association as : associations){
+								if((as.isClass1(clase) && as.isClass2(clase2) )|| (as.isClass1(clase2) && as.isClass2(clase))){
+									clase2.setColor(Color.red);
+								}
+							}
 							paint(getGraphics());
 							break;
 						}else if(clase2!=null){
@@ -244,41 +256,30 @@ public class Diagram
 
 			for (int i = classes.size() - 1; i >= 0; i--) {
 				Class cl=classes.get(i);
-				// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
 				if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
 					y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
-					// El mouse se ha pulsado dentro de esta clase
 					clase = cl;
 					if(clase.isSelected()){
 						clase.setColor(Color.white);
 					}else{
 						clase.setColor(Color.cyan);
 					}
-
 					break;
 				}
 			}
 			if(clase != null){
-				// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight(
 				for (Class cl : classes) {
-					// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
-						// El mouse se ha pulsado dentro de esta clase
 						if(cl != clase){
 							cl.setColor(Color.white);
 						}
 					
 				}
 			}else{
-				// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight(
 					for (Class cl : classes) {
-						// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
-							// El mouse se ha pulsado dentro de esta clase
 								cl.setColor(Color.white);
-						
 					}
 			}
 			paint(getGraphics());
-
 			clase= null;
 
 		}
