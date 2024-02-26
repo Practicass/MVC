@@ -114,6 +114,9 @@ public class Diagram
 
 						this.addAssociation();
 						window.updateNAssociations(this);
+						clase2.setColor(Color.white);
+						clase.setColor(Color.white);
+						paint(getGraphics());
 						clase = null;
 						clase2 = null;
 					}
@@ -153,16 +156,23 @@ public class Diagram
 				}
 				if(clase != null){
 					classes.remove(clase);
-					for(Association as : associations){
-						if(as.isClass(clase)){
-							window.updateNAssociations(this);
-							associations.remove(as);
-							window.updateNAssociations(this);
+					// for(Association as : associations){
+					// 	if(as.isClass(clase)){
+					// 		associations.remove(as);
+					// 	}
+					// }
+					Iterator<Association> iterator = associations.iterator();
+					while (iterator.hasNext()) {
+						Association as = iterator.next();
+						if (as.isClass(clase)) {
+							iterator.remove();
 						}
 					}
 					paint(getGraphics());
 					clase= null;
 					window.updateNClasses(this);
+					window.updateNAssociations(this);
+
 					
 				}
 				
@@ -176,6 +186,21 @@ public class Diagram
 		//…
 		x=e.getX();
 		y=e.getY();
+		for (int i = classes.size() - 1; i >= 0; i--) {
+			Class cl=classes.get(i);
+			// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
+			if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
+			y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
+				// El mouse se ha pulsado dentro de esta clase
+				clase = cl;
+				classes.remove(cl);
+				classes.insertElementAt(cl, classes.size());
+				print(getGraphics());
+				break;
+			}
+			
+		}
+		clase=null;
 	}
     
 	public void mouseDragged(MouseEvent e) {
@@ -184,6 +209,27 @@ public class Diagram
 			if(!clase.isSelected()){
 				clase.setRectangle(e.getX()-x, e.getY()-y, clase.getWidth(), clase.getHeight());
 				paint(getGraphics());
+			}else{
+				x = e.getX();
+				y = e.getY();
+				for (Class cl : classes) {
+					if(cl != clase){
+						// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
+						if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
+						y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
+							// El mouse se ha pulsado dentro de esta clase
+							clase2 = cl;
+							clase2.setColor(Color.green);
+							paint(getGraphics());
+							break;
+						}else if(clase2!=null){
+							clase2.setColor(Color.white);
+							paint(getGraphics());
+						}
+					}
+					
+				}
+
 			}
 		}
 		
@@ -195,29 +241,46 @@ public class Diagram
 
 	public void keyTyped(KeyEvent e) {
 		if(e.getKeyChar() == KeyEvent.VK_S){
-			for (Class cl : classes) {
-				// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
-				if (cl.isSelected()) {
-					// El mouse se ha pulsado dentro de esta clase
-					cl.setColor(Color.white);
-					paint(getGraphics());
-					break;
-				}
-			}
-			for (Class cl : classes) {
+
+			for (int i = classes.size() - 1; i >= 0; i--) {
+				Class cl=classes.get(i);
 				// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
 				if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
 					y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
 					// El mouse se ha pulsado dentro de esta clase
 					clase = cl;
+					if(clase.isSelected()){
+						clase.setColor(Color.white);
+					}else{
+						clase.setColor(Color.cyan);
+					}
+
 					break;
 				}
 			}
 			if(clase != null){
-				clase.setColor(Color.cyan);
-				paint(getGraphics());
-				clase= null;
+				// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight(
+				for (Class cl : classes) {
+					// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
+						// El mouse se ha pulsado dentro de esta clase
+						if(cl != clase){
+							cl.setColor(Color.white);
+						}
+					
+				}
+			}else{
+				// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight(
+					for (Class cl : classes) {
+						// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
+							// El mouse se ha pulsado dentro de esta clase
+								cl.setColor(Color.white);
+						
+					}
 			}
+			paint(getGraphics());
+
+			clase= null;
+
 		}
 
     }

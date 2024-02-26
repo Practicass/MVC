@@ -24,7 +24,9 @@ public class Association {
         double y1 = class1.getY() + class1.getHeight() / 2.0;
         double x2 = class2.getX() + class2.getWidth() / 2.0;
         double y2 = class2.getY() + class2.getHeight() / 2.0;
-        this.line = new Line2D.Double(x1, y1, x2, y2);
+
+		this.line = new Line2D.Double(x1, y1, x2, y2);
+		
 	}
 	
 	public void draw(Graphics graphics) {
@@ -36,11 +38,14 @@ public class Association {
         double x2 = class2.getX() + class2.getWidth() / 2.0;
         double y2 = class2.getY() + class2.getHeight() / 2.0;
 		if(class1 == class2){
-			
-		}
+			double side = 100; // Change this to change the size of the square
+        	graphics2d.setColor(Color.black);
+        	graphics2d.drawRect((int)x1, (int)y1, (int)side, (int)side);
+		}else{
 		line.setLine(x1, y1, x2, y2);
 		graphics2d.setColor(Color.black);
 		graphics2d.draw(line);
+		}
 		// ...
 	}
 
