@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 //otros imports …
 
-import javax.sound.sampled.Line;
 
 
 public class Association {
@@ -30,15 +29,15 @@ public class Association {
 	}
 	
 	public void draw(Graphics graphics) {
-		// Dibuja la asociación
+
 		Graphics2D graphics2d = (Graphics2D)graphics;
-		//Dibuja la clase
+
 		double x1 = class1.getX() + class1.getWidth() / 2.0;
         double y1 = class1.getY() + class1.getHeight() / 2.0;
         double x2 = class2.getX() + class2.getWidth() / 2.0;
         double y2 = class2.getY() + class2.getHeight() / 2.0;
 		if(class1 == class2){
-			double side = 100; // Change this to change the size of the square
+			double side = 100; 
         	graphics2d.setColor(Color.black);
         	graphics2d.drawRect((int)x1, (int)y1, (int)side, (int)side);
 		}else{
@@ -46,7 +45,7 @@ public class Association {
 		graphics2d.setColor(Color.black);
 		graphics2d.draw(line);
 		}
-		// ...
+
 	}
 
 	public boolean isClass1(Class clas){
@@ -56,8 +55,6 @@ public class Association {
 		return (this.class2 == clas);
 	}
 	
-	
-	// Más métodos
-	// ...
+
 
 }

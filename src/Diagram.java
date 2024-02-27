@@ -83,7 +83,6 @@ public class Diagram
 			Class cl=classes.get(i);			// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
 			if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
 				y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
-				// El mouse se ha pulsado dentro de esta clase
 				x -= cl.getX();
 				y -= cl.getY();
 				clase = cl;
@@ -99,10 +98,8 @@ public class Diagram
 					x = e.getX();
 					y = e.getY();
 					for (Class cl : classes) {
-						// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
 						if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
 							y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
-							// El mouse se ha pulsado dentro de esta clase
 							x -= cl.getX();
 							y -= cl.getY();
 							clase2 = cl;
@@ -124,7 +121,6 @@ public class Diagram
 						}
 						clase2.setColor(Color.white);
 						clase.setColor(Color.white);
-						// paint(getGraphics());
 						repaint();
 
 						clase = null;
@@ -157,10 +153,8 @@ public class Diagram
 				int y = e.getY();
 			
 				for (Class cl : classes) {
-					// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
 					if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
 						y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
-						// El mouse se ha pulsado dentro de esta clase
 						clase = cl;
 						
 					}
@@ -193,10 +187,8 @@ public class Diagram
 		y=e.getY();
 		for (int i = classes.size() - 1; i >= 0; i--) {
 			Class cl=classes.get(i);
-			// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
 			if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
 			y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
-				// El mouse se ha pulsado dentro de esta clase
 				clase = cl;
 				classes.remove(cl);
 				classes.insertElementAt(cl, classes.size());
@@ -219,10 +211,8 @@ public class Diagram
 				y = e.getY();
 				for (Class cl : classes) {
 					if(cl != clase){
-						// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
 						if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
 						y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
-							// El mouse se ha pulsado dentro de esta clase
 							clase2 = cl;
 							clase2.setColor(Color.green);
 							for(Association as : associations){
@@ -230,12 +220,10 @@ public class Diagram
 									clase2.setColor(Color.red);
 								}
 							}
-							// paint(getGraphics());
 							repaint();
 							break;
 						}else if(clase2!=null){
 							clase2.setColor(Color.white);
-							// paint(getGraphics());
 							repaint();
 						}
 					}
@@ -285,11 +273,11 @@ public class Diagram
 		}
 
     }
-    
 	public void keyPressed(KeyEvent e) {
 		//…
 	}
     
     	public void keyReleased(KeyEvent e) {
     	}
+
 }
