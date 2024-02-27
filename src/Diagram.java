@@ -12,8 +12,8 @@ public class Diagram
 	//atributos
 	private Window window;//Ventana en la que está el diagrama
 	private int nClasses = 0; //Número de clases
-	public Class clase; 
-	public Class clase2; 
+	public Class claseSeleccionada; 
+	public Class claseAsociar; 
 	private Vector<Class> classes = new Vector<Class>(); //las clases que crea el usuario
 	private Vector<Association> associations = new Vector<Association>(); // las asociaciones que crea el usuario
 	
@@ -41,7 +41,7 @@ public class Diagram
 	public void addAssociation() {
 		//Añade una asociación al diagrama
 		//...
-		associations.add(new Association(clase, clase2));
+		associations.add(new Association(claseSeleccionada, claseAsociar));
 		repaint();
 	}
 	
@@ -70,6 +70,11 @@ public class Diagram
 
 		
 	}
+
+	private boolean inClass(Class cl){
+		return (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
+				y >= cl.getY() && y <= cl.getY() + cl.getHeight());
+	}
 	
 	/********************************************/
 	/** MÈtodos de MouseListener               **/
@@ -81,11 +86,10 @@ public class Diagram
 	
 		for (int i = classes.size() - 1; i >= 0; i--) {
 			Class cl=classes.get(i);			// Suponiendo que Class tiene métodos getX(), getY(), getWidth() y getHeight()
-			if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
-				y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
+			if (inClass(cl)) {
 				x -= cl.getX();
 				y -= cl.getY();
-				clase = cl;
+				claseSeleccionada = cl;
 				break;
 			}
 		}
@@ -93,23 +97,22 @@ public class Diagram
     
     	public void mouseReleased(MouseEvent e) {
  		//…		
-			if (clase != null) {
-				if(clase.isSelected()){
+			if (claseSeleccionada != null) {
+				if(claseSeleccionada.isSelected()){
 					x = e.getX();
 					y = e.getY();
 					for (Class cl : classes) {
-						if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
-							y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
+						if (inClass(cl)) {
 							x -= cl.getX();
 							y -= cl.getY();
-							clase2 = cl;
+							claseAsociar = cl;
 							break;
 						}
 					}
-					if(clase2 != null){
+					if(claseAsociar != null){
 						boolean existente = false;
 						for(Association as : associations){
-							if((as.isClass1(clase) && as.isClass2(clase2)) || (as.isClass1(clase2) && as.isClass2(clase))){
+							if((as.isClass1(claseSeleccionada) && as.isClass2(claseAsociar)) || (as.isClass1(claseAsociar) && as.isClass2(claseSeleccionada))){
 								existente = true;
 							}
 						}
@@ -119,19 +122,19 @@ public class Diagram
 
 
 						}
-						clase2.setColor(Color.white);
-						clase.setColor(Color.white);
+						claseAsociar.setColor(Color.white);
+						claseSeleccionada.setColor(Color.white);
 						repaint();
 
-						clase = null;
-						clase2 = null;
+						claseSeleccionada = null;
+						claseAsociar = null;
 
 					}
 
 				}
 				else{
 					repaint();
-					clase = null;
+					claseSeleccionada = null;
 				}
 
 
@@ -149,28 +152,26 @@ public class Diagram
 			if (e.getButton() == MouseEvent.BUTTON1) { 
 
 			} else if (e.getButton() == MouseEvent.BUTTON3) { //BUTTON3 es el botón derecho
-				int x = e.getX();
-				int y = e.getY();
+				x = e.getX();
+				y = e.getY();
 			
 				for (Class cl : classes) {
-					if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
-						y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
-						clase = cl;
-						
+					if (inClass(cl)) {
+						claseSeleccionada = cl;
 					}
 				}
-				if(clase != null){
-					classes.remove(clase);
+				if(claseSeleccionada != null){
+					classes.remove(claseSeleccionada);
 
 					Iterator<Association> iterator = associations.iterator();
 					while (iterator.hasNext()) {
 						Association as = iterator.next();
-						if (as.isClass1(clase) || as.isClass2(clase)) {
+						if (as.isClass1(claseSeleccionada) || as.isClass2(claseSeleccionada)) {
 							iterator.remove();
 						}
 					}
 					repaint();
-					clase= null;
+					claseSeleccionada= null;
 					window.updateNClasses(this);
 					window.updateNAssociations(this);
 				}
@@ -187,9 +188,8 @@ public class Diagram
 		y=e.getY();
 		for (int i = classes.size() - 1; i >= 0; i--) {
 			Class cl=classes.get(i);
-			if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
-			y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
-				clase = cl;
+			if (inClass(cl)) {
+				claseSeleccionada = cl;
 				classes.remove(cl);
 				classes.insertElementAt(cl, classes.size());
 				repaint();
@@ -197,33 +197,32 @@ public class Diagram
 			}
 			
 		}
-		clase=null;
+		claseSeleccionada=null;
 	}
     
 	public void mouseDragged(MouseEvent e) {
 		//…
-		if(clase != null){
-			if(!clase.isSelected()){
-				clase.setRectangle(e.getX()-x, e.getY()-y, clase.getWidth(), clase.getHeight());
+		if(claseSeleccionada != null){
+			if(!claseSeleccionada.isSelected()){
+				claseSeleccionada.setRectangle(e.getX()-x, e.getY()-y, claseSeleccionada.getWidth(), claseSeleccionada.getHeight());
 				repaint();
 			}else{
 				x = e.getX();
 				y = e.getY();
 				for (Class cl : classes) {
-					if(cl != clase){
-						if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
-						y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
-							clase2 = cl;
-							clase2.setColor(Color.green);
+					if(cl != claseSeleccionada){
+						if (inClass(cl)) {
+							claseAsociar = cl;
+							claseAsociar.setColor(Color.green);
 							for(Association as : associations){
-								if((as.isClass1(clase) && as.isClass2(clase2) )|| (as.isClass1(clase2) && as.isClass2(clase))){
-									clase2.setColor(Color.red);
+								if((as.isClass1(claseSeleccionada) && as.isClass2(claseAsociar) )|| (as.isClass1(claseAsociar) && as.isClass2(claseSeleccionada))){
+									claseAsociar.setColor(Color.red);
 								}
 							}
 							repaint();
 							break;
-						}else if(clase2!=null){
-							clase2.setColor(Color.white);
+						}else if(claseAsociar!=null){
+							claseAsociar.setColor(Color.white);
 							repaint();
 						}
 					}
@@ -244,20 +243,19 @@ public class Diagram
 
 			for (int i = classes.size() - 1; i >= 0; i--) {
 				Class cl=classes.get(i);
-				if (x >= cl.getX() && x <= cl.getX() + cl.getWidth() &&
-					y >= cl.getY() && y <= cl.getY() + cl.getHeight()) {
-					clase = cl;
-					if(clase.isSelected()){
-						clase.setColor(Color.white);
+				if (inClass(cl)) {
+					claseSeleccionada = cl;
+					if(claseSeleccionada.isSelected()){
+						claseSeleccionada.setColor(Color.white);
 					}else{
-						clase.setColor(Color.cyan);
+						claseSeleccionada.setColor(Color.cyan);
 					}
 					break;
 				}
 			}
-			if(clase != null){
+			if(claseSeleccionada != null){
 				for (Class cl : classes) {
-						if(cl != clase){
+						if(cl != claseSeleccionada){
 							cl.setColor(Color.white);
 						}
 					
@@ -268,7 +266,6 @@ public class Diagram
 					}
 			}
 			repaint();
-			clase= null;
 
 		}
 
