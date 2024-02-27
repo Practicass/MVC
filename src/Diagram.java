@@ -18,7 +18,7 @@ public class Diagram
 	private Vector<Association> associations = new Vector<Association>(); // las asociaciones que crea el usuario
 	
 	// ... (otros posibles atributos)
-	int x, y;
+	private int x, y;
 
 	//metodos
 	public Diagram(Window theWindow) {
@@ -35,15 +35,14 @@ public class Diagram
 		//Añade una clase al diagrama
 		classes.add(new Class("clase "+nClasses, 10, 10, 100, 100, Color.white));
 		nClasses++;
-		paint(getGraphics());
-
+		repaint();
 	}
 
 	public void addAssociation() {
 		//Añade una asociación al diagrama
 		//...
 		associations.add(new Association(clase, clase2));
-		paint(getGraphics());
+		repaint();
 	}
 	
 	public int getNClasses(){
@@ -125,7 +124,8 @@ public class Diagram
 						}
 						clase2.setColor(Color.white);
 						clase.setColor(Color.white);
-						paint(getGraphics());
+						// paint(getGraphics());
+						repaint();
 
 						clase = null;
 						clase2 = null;
@@ -134,7 +134,7 @@ public class Diagram
 
 				}
 				else{
-					paint(getGraphics());
+					repaint();
 					clase = null;
 				}
 
@@ -175,12 +175,10 @@ public class Diagram
 							iterator.remove();
 						}
 					}
-					paint(getGraphics());
+					repaint();
 					clase= null;
 					window.updateNClasses(this);
 					window.updateNAssociations(this);
-
-					
 				}
 				
 			}
@@ -202,7 +200,7 @@ public class Diagram
 				clase = cl;
 				classes.remove(cl);
 				classes.insertElementAt(cl, classes.size());
-				print(getGraphics());
+				repaint();
 				break;
 			}
 			
@@ -215,7 +213,7 @@ public class Diagram
 		if(clase != null){
 			if(!clase.isSelected()){
 				clase.setRectangle(e.getX()-x, e.getY()-y, clase.getWidth(), clase.getHeight());
-				paint(getGraphics());
+				repaint();
 			}else{
 				x = e.getX();
 				y = e.getY();
@@ -232,11 +230,13 @@ public class Diagram
 									clase2.setColor(Color.red);
 								}
 							}
-							paint(getGraphics());
+							// paint(getGraphics());
+							repaint();
 							break;
 						}else if(clase2!=null){
 							clase2.setColor(Color.white);
-							paint(getGraphics());
+							// paint(getGraphics());
+							repaint();
 						}
 					}
 					
@@ -279,7 +279,7 @@ public class Diagram
 								cl.setColor(Color.white);
 					}
 			}
-			paint(getGraphics());
+			repaint();
 			clase= null;
 
 		}
